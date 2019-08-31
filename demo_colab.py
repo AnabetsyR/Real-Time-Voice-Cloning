@@ -170,9 +170,8 @@ if __name__ == '__main__':
                                      synthesizer.sample_rate)
             num_generated += 1
 
-            dirpath = os.getcwd()
-
-            fpath = dirpath + fpath
+            #dirpath = os.getcwd()
+            #fpath = dirpath + fpath
 
             print("\nSaved output as %s/%s\n\n" % fpath)
             
