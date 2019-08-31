@@ -9,32 +9,21 @@ import librosa
 import argparse
 import torch
 import sys
-
-
+import os
+ 
 if __name__ == '__main__':
     ## Info & args
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
-    parser.add_argument("-e", "--enc_model_fpath", type=Path, 
-                        default="encoder/saved_models/pretrained.pt",
-                        help="Path to a saved encoder")
-    parser.add_argument("-s", "--syn_model_dir", type=Path, 
-                        default="synthesizer/saved_models/logs-pretrained/",
-                        help="Directory containing the synthesizer model")
-    parser.add_argument("-v", "--voc_model_fpath", type=Path, 
-                        default="vocoder/saved_models/pretrained/pretrained.pt",
-                        help="Path to a saved vocoder")
-    parser.add_argument("--low_mem", action="store_true", help=\
-        "If True, the memory used by the synthesizer will be freed after each use. Adds large "
-        "overhead but allows to save some GPU memory for lower-end GPUs.")
-    parser.add_argument("--no_sound", action="store_true", help=\
-        "If True, audio won't be played.")
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument("-e", "--enc_model_fpath", type=Path, default="encoder/saved_models/pretrained.pt",help="Path to a saved encoder")
+    parser.add_argument("-s", "--syn_model_dir", type=Path, default="synthesizer/saved_models/logs-pretrained/", help="Directory containing the synthesizer model")
+    parser.add_argument("-v", "--voc_model_fpath", type=Path, default="vocoder/saved_models/pretrained/pretrained.pt", help="Path to a saved vocoder")
+    parser.add_argument("--low_mem", action="store_true", help="If True, the memory used by the synthesizer will be freed after each use. Adds large overhead but allows to save some GPU memory for lower-end GPUs.")
+    parser.add_argument("--no_sound", action="store_true", help="If True, audio won't be played.")
     args = parser.parse_args()
     print_args(args, parser)
     if not args.no_sound:
         import sounddevice as sd
-        
     
     ## Print some environment information (for debugging purposes)
     print("Running a test of your configuration...\n")
@@ -112,35 +101,38 @@ if __name__ == '__main__':
           "show how you can interface this project easily with your own. See the source code for "
           "an explanation of what is happening.\n")
     
+    # **************************************************************
+    # Get the reference audio filepath
+    message = "Reference voice: enter an audio filepath of a voice to be cloned (mp3, " \
+                "wav, m4a, flac, ...):\n"
+    in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
+    
+    
+    ## Computing the embedding
+    # First, we load the wav using the function that the speaker encoder provides. This is 
+    # important: there is preprocessing that must be applied.
+    
+    # The following two methods are equivalent:
+    # - Directly load from the filepath:
+    preprocessed_wav = encoder.preprocess_wav(in_fpath)
+    # - If the wav is already loaded:
+    original_wav, sampling_rate = librosa.load(in_fpath)
+    preprocessed_wav = encoder.preprocess_wav(original_wav, sampling_rate)
+    print("Loaded file succesfully")
+    
+    # Then we derive the embedding. There are many functions and parameters that the 
+    # speaker encoder interfaces. These are mostly for in-depth research. You will typically
+    # only use this function (with its default parameters):
+    embed = encoder.embed_utterance(preprocessed_wav)
+    print("Created the embedding")
+
+    # **************************************************************
+    
     print("Interactive generation loop")
     num_generated = 0
     while True:
         try:
-            # Get the reference audio filepath
-            message = "Reference voice: enter an audio filepath of a voice to be cloned (mp3, " \
-                      "wav, m4a, flac, ...):\n"
-            in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
-            
-            
-            ## Computing the embedding
-            # First, we load the wav using the function that the speaker encoder provides. This is 
-            # important: there is preprocessing that must be applied.
-            
-            # The following two methods are equivalent:
-            # - Directly load from the filepath:
-            preprocessed_wav = encoder.preprocess_wav(in_fpath)
-            # - If the wav is already loaded:
-            original_wav, sampling_rate = librosa.load(in_fpath)
-            preprocessed_wav = encoder.preprocess_wav(original_wav, sampling_rate)
-            print("Loaded file succesfully")
-            
-            # Then we derive the embedding. There are many functions and parameters that the 
-            # speaker encoder interfaces. These are mostly for in-depth research. You will typically
-            # only use this function (with its default parameters):
-            embed = encoder.embed_utterance(preprocessed_wav)
-            print("Created the embedding")
-            
-            
+
             ## Generating the spectrogram
             text = input("Write a sentence (+-20 words) to be synthesized:\n")
             
@@ -177,7 +169,12 @@ if __name__ == '__main__':
             librosa.output.write_wav(fpath, generated_wav.astype(np.float32), 
                                      synthesizer.sample_rate)
             num_generated += 1
-            print("\nSaved output as %s\n\n" % fpath)
+
+            dirpath = os.getcwd()
+
+            fpath = dirpath + fpath
+
+            print("\nSaved output as %s/%s\n\n" % fpath)
             
             
         except Exception as e:
