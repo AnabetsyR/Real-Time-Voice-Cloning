@@ -27,9 +27,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     print_args(args, parser)
-    if not args.no_sound:
-        print("\nNO SOUND SD")
-        import sounddevice as sd
+    #if not args.no_sound:
+    #    print("\nNO SOUND SD")
+    #    import sounddevice as sd
         
     if args.textin:
             print("\nargs.textin: ", args.textin)
@@ -186,10 +186,10 @@ if __name__ == '__main__':
         generated_wav = np.pad(generated_wav, (0, synthesizer.sample_rate), mode="constant")
         
         # Play the audio (non-blocking)
-        if not args.no_sound:
-            print("\nNO SOUND STOP")
-            sd.stop()
-            sd.play(generated_wav, synthesizer.sample_rate)
+        #if not args.no_sound:
+        #    print("\nNO SOUND STOP")
+        #    sd.stop()
+        #    sd.play(generated_wav, synthesizer.sample_rate)
             
         # Save it on the disk
         if args.out:
