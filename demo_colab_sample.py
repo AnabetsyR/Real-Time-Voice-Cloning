@@ -41,7 +41,7 @@ if __name__ == '__main__':
         print("\nNO VALUE: args.voicein")       
 
     if args.out:
-            print("\nargs.out: ", args.out)
+        print("\nargs.out: ", args.out)
     else:
         print("\nNO VALUE: args.out")               
     
@@ -129,15 +129,9 @@ if __name__ == '__main__':
     #            "wav, m4a, flac, ...):\n"
     #in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
 
-    if args.voicein:
-        in_fpath = args.voicein
-    else:
-        in_fpath = "/content/Real-Time-Voice-Cloning/sample.wav"
 
+    in_fpath = args.voicein #<<<<<<<<<COMMAND LINE PARAM
 
-
-    
-    
     ## Computing the embedding
     # First, we load the wav using the function that the speaker encoder provides. This is 
     # important: there is preprocessing that must be applied.
@@ -162,7 +156,7 @@ if __name__ == '__main__':
 
 
         if args.textin:
-            text = args.textin
+            text = args.textin  #<<<<<<<<<COMMAND LINE PARAM
         else:
             text = input("Write a sentence (+-20 words) to be synthesized:\n")
 
@@ -199,15 +193,7 @@ if __name__ == '__main__':
             
         # Save it on the disk
         #fpath = "demo_output_%02d.wav" % num_generated
-
-        if args.out:
-            fpath = args.out
-        else:
-            fpath = "output.wav"
-
-
-
-        
+        fpath = args.out #<<<<<<<<<COMMAND LINE PARAM
 
         print(generated_wav.dtype)
         librosa.output.write_wav(fpath, generated_wav.astype(np.float32), synthesizer.sample_rate)
