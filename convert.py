@@ -20,13 +20,15 @@ if __name__ == '__main__':
     parser.add_argument("-s", "--syn_model_dir", type=Path,default="synthesizer/saved_models/logs-pretrained/",help="Directory containing the synthesizer model")
     parser.add_argument("-v", "--voc_model_fpath", type=Path,default="vocoder/saved_models/pretrained/pretrained.pt",help="Path to a saved vocoder")
     parser.add_argument("--low_mem", action="store_true", help="If True, the memory used by the synthesizer will be freed after each use. Adds large overhead but allows to save some GPU memory for lower-end GPUs.")
+    parser.add_argument("--no_sound", action="store_true", help="If True, audio won't be played.")
     parser.add_argument("--out", type=Path,default="output.wav", help="sets the output wav file")
     parser.add_argument("--textin", type=Path,help="sets the output wav file")
     parser.add_argument("--voicein", type=Path,default="/content/Real-Time-Voice-Cloning/sample.wav",  help="sets the input wav file")
 
     args = parser.parse_args()
     print_args(args, parser)
-\
+    if not args.no_sound:
+        import sounddevice as sd
         
     if args.textin:
         print("\nargs.textin: ", args.textin)
@@ -182,6 +184,10 @@ if __name__ == '__main__':
         # pad it.
         generated_wav = np.pad(generated_wav, (0, synthesizer.sample_rate), mode="constant")
         
+        # Play the audio (non-blocking)
+        if not args.no_sound:
+            sd.stop()
+            sd.play(generated_wav, synthesizer.sample_rate)
             
         # Save it on the disk
         if args.out:
