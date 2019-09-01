@@ -128,6 +128,10 @@ if __name__ == '__main__':
     message = "Reference voice: enter an audio filepath of a voice to be cloned (mp3, wav, m4a, flac, ...):\n"
     in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
     
+    print("in_fpath: ", in_fpath)
+
+
+
     
     ## Computing the embedding
     # First, we load the wav using the function that the speaker encoder provides. This is 
@@ -153,7 +157,11 @@ if __name__ == '__main__':
 
     try:
         ## Generating the spectrogram
-        text = input("Write a sentence (+-20 words) to be synthesized:\n")
+        if args.textin:
+            text = args.textin
+        else:
+            text = input("Write a sentence (+-20 words) to be synthesized:\n")
+
         
         # The synthesizer works in batch, so you need to put your data in a list or numpy array
         texts = [text]
@@ -182,7 +190,10 @@ if __name__ == '__main__':
             sd.play(generated_wav, synthesizer.sample_rate)
             
         # Save it on the disk
-        fpath = "output.wav"
+        if args.out:
+            fpath = args.out
+        else:
+            fpath = "output.wav"
 
         print(generated_wav.dtype)
         librosa.output.write_wav(fpath, generated_wav.astype(np.float32), synthesizer.sample_rate)
