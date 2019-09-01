@@ -132,6 +132,10 @@ if __name__ == '__main__':
 
     in_fpath = args.voicein #<<<<<<<<<COMMAND LINE PARAM
 
+
+
+    print("in_fpath: ", in_fpath)
+
     ## Computing the embedding
     # First, we load the wav using the function that the speaker encoder provides. This is 
     # important: there is preprocessing that must be applied.
@@ -139,9 +143,14 @@ if __name__ == '__main__':
     # The following two methods are equivalent:
     # - Directly load from the filepath:
     preprocessed_wav = encoder.preprocess_wav(in_fpath)
+
+
+    print("--processed")
     # - If the wav is already loaded:
     original_wav, sampling_rate = librosa.load(in_fpath)
+    print("--loaded")
     preprocessed_wav = encoder.preprocess_wav(original_wav, sampling_rate)
+    print("--preprocessed")
     print("Loaded file succesfully")
     
     # Then we derive the embedding. There are many functions and parameters that the 
