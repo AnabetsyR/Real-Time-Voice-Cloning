@@ -158,7 +158,7 @@ if __name__ == '__main__':
     try:
         ## Generating the spectrogram
         if args.textin:
-            text = args.textin
+            text = str(args.textin)
         else:
             text = input("Write a sentence (+-20 words) to be synthesized:\n")
 
