@@ -23,6 +23,7 @@ if __name__ == '__main__':
     parser.add_argument("--no_sound", action="store_true", help="If True, audio won't be played.")
     parser.add_argument("--out", action="store_true", help="sets the output wav file")
     parser.add_argument("--textin", action="store_true", help="sets the output wav file")
+    parser.add_argument("--voicein", action="store_true", help="sets the input wav file")
 
     args = parser.parse_args()
     print_args(args, parser)
@@ -34,6 +35,15 @@ if __name__ == '__main__':
     else:
         print("\nNO VALUE: args.textin")   
         
+    if args.voicein:
+        print("\nargs.voicein: ", args.voicein)
+    else:
+        print("\nNO VALUE: args.voicein")       
+
+    if args.out:
+            print("\nargs.out: ", args.out)
+    else:
+        print("\nNO VALUE: args.out")               
     
     ## Print some environment information (for debugging purposes)
     print("Running a test of your configuration...\n")
