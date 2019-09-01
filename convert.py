@@ -123,21 +123,16 @@ if __name__ == '__main__':
     
 
     # ********************************
+    if args.voicein:
+        print("args.voicein: ", args.voicein)
+        in_fpath = args.voicein
+    else:
+        # Get the reference audio filepath
+        message = "Reference voice: enter an audio filepath of a voice to be cloned (mp3, wav, m4a, flac, ...):\n"
+        in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
 
-
-
-
-
-
-    # Get the reference audio filepath
-    message = "Reference voice: enter an audio filepath of a voice to be cloned (mp3, wav, m4a, flac, ...):\n"
-    in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
-    
     print("in_fpath: ", in_fpath)
-    print("args.voicein: ", args.voicein)
-
-    in_fpath = args.voicein
-
+    
     ## Computing the embedding
     # First, we load the wav using the function that the speaker encoder provides. This is 
     # important: there is preprocessing that must be applied.
