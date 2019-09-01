@@ -10,6 +10,7 @@ import argparse
 import torch
 import sys
 
+
 if __name__ == '__main__':
     ## Info & args
     parser = argparse.ArgumentParser(
@@ -28,9 +29,9 @@ if __name__ == '__main__':
     print_args(args, parser)
     if not args.no_sound:
         import sounddevice as sd
-
+        
     if args.textin:
-        print("\nargs.textin: ", args.textin)
+            print("\nargs.textin: ", args.textin)
     else:
         print("\nNO VALUE: args.textin")   
         
@@ -42,7 +43,7 @@ if __name__ == '__main__':
     if args.out:
         print("\nargs.out: ", args.out)
     else:
-        print("\nNO VALUE: args.out")               
+        print("\nNO VALUE: args.out")         
     
     ## Print some environment information (for debugging purposes)
     print("Running a test of your configuration...\n")
@@ -114,6 +115,7 @@ if __name__ == '__main__':
     
     print("All test passed! You can now synthesize speech.\n\n")
     
+    
     ## Interactive speech generation
     print("This is a GUI-less example of interface to SV2TTS. The purpose of this script is to "
           "show how you can interface this project easily with your own. See the source code for "
@@ -123,13 +125,10 @@ if __name__ == '__main__':
     # ********************************
 
     # Get the reference audio filepath
-    # message = "Reference voice: enter an audio filepath of a voice to be cloned (mp3, " \
-    #            "wav, m4a, flac, ...):\n"
-    #in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
-
-
-    in_fpath = args.voicein
-
+    message = "Reference voice: enter an audio filepath of a voice to be cloned (mp3, wav, m4a, flac, ...):\n"
+    in_fpath = Path(input(message).replace("\"", "").replace("\'", ""))
+    
+    
     ## Computing the embedding
     # First, we load the wav using the function that the speaker encoder provides. This is 
     # important: there is preprocessing that must be applied.
@@ -149,21 +148,13 @@ if __name__ == '__main__':
     print("Created the embedding")
 
     # ********************************
+
+    print("Interactive generation loop")
+
     try:
         ## Generating the spectrogram
-
-
-        if args.textin:
-            text = args.textin
-        else:
-            text = input("Write a sentence (+-20 words) to be synthesized:\n")
-
-
-
-       
-        #text = args.textin 
-
-
+        text = input("Write a sentence (+-20 words) to be synthesized:\n")
+        
         # The synthesizer works in batch, so you need to put your data in a list or numpy array
         texts = [text]
         embeds = [embed]
@@ -172,6 +163,7 @@ if __name__ == '__main__':
         specs = synthesizer.synthesize_spectrograms(texts, embeds)
         spec = specs[0]
         print("Created the mel spectrogram")
+        
         
         ## Generating the waveform
         print("Synthesizing the waveform:")
@@ -190,25 +182,14 @@ if __name__ == '__main__':
             sd.play(generated_wav, synthesizer.sample_rate)
             
         # Save it on the disk
-        #fpath = "demo_output_%02d.wav" % num_generated
-
-        if args.out:
-            fpath = args.out
-        else:
-            fpath = "output.wav"
-
-
-
-        
+        fpath = "output.wav"
 
         print(generated_wav.dtype)
         librosa.output.write_wav(fpath, generated_wav.astype(np.float32), synthesizer.sample_rate)
 
         print("\nSaved output as %s\n\n" % fpath)
-        print("\nSaved output as /content/Real-Time-Voice-Cloning/%s\n\n" % fpath)
-        print("\nSaved output as %s\n\n" % args.out)
-        print("\nDONE")
-
+        
+        
     except Exception as e:
         print("Caught exception: %s" % repr(e))
         print("Restarting\n")
