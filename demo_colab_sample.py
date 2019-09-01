@@ -164,13 +164,11 @@ if __name__ == '__main__':
         spec = specs[0]
         print("Created the mel spectrogram")
         
-        
         ## Generating the waveform
         print("Synthesizing the waveform:")
         # Synthesizing the waveform is fairly straightforward. Remember that the longer the
         # spectrogram, the more time-efficient the vocoder.
         generated_wav = vocoder.infer_waveform(spec)
-        
         
         ## Post-generation
         # There's a bug with sounddevice that makes the audio cut one second earlier, so we
@@ -186,17 +184,14 @@ if __name__ == '__main__':
         #fpath = "demo_output_%02d.wav" % num_generated
         fpath = "output.wav"
 
-
         print(generated_wav.dtype)
-        librosa.output.write_wav(fpath, generated_wav.astype(np.float32), 
-                                    synthesizer.sample_rate)
-        num_generated += 1
+        librosa.output.write_wav(fpath, generated_wav.astype(np.float32), synthesizer.sample_rate)
+
         print("\nSaved output as %s\n\n" % fpath)
         print("\nSaved output as /content/Real-Time-Voice-Cloning/%s\n\n" % fpath)
         print("\nSaved output as %s\n\n" % args.out)
         print("\nDONE")
 
-        
     except Exception as e:
         print("Caught exception: %s" % repr(e))
         print("Restarting\n")
