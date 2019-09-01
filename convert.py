@@ -28,10 +28,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print_args(args, parser)
     if not args.no_sound:
+        print("\nNO SOUND SD")
         import sounddevice as sd
         
     if args.textin:
-        print("\nargs.textin: ", args.textin)
+            print("\nargs.textin: ", args.textin)
     else:
         print("\nNO VALUE: args.textin")   
         
@@ -186,6 +187,7 @@ if __name__ == '__main__':
         
         # Play the audio (non-blocking)
         if not args.no_sound:
+            print("\nNO SOUND STOP")
             sd.stop()
             sd.play(generated_wav, synthesizer.sample_rate)
             
