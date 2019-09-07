@@ -90,8 +90,8 @@ if __name__ == '__main__':
     # - Directly load from the filepath:
     preprocessed_wav = encoder.preprocess_wav(in_fpath)
     # - If the wav is already loaded:
-    original_wav, sampling_rate = librosa.load(in_fpath)
-    preprocessed_wav = encoder.preprocess_wav(original_wav, sampling_rate)
+    #original_wav, sampling_rate = librosa.load(in_fpath)
+    #preprocessed_wav = encoder.preprocess_wav(original_wav, sampling_rate)
     print("Loaded file succesfully")
     
     # Then we derive the embedding. There are many functions and parameters that the 
@@ -101,6 +101,12 @@ if __name__ == '__main__':
     print("Created the embedding")
 
     # ********************************
+
+
+    embeds = []
+    embeds.append(encoder.embed_utterance(encoder.preprocess_wav("input.wav")))
+    embeds.append(encoder.embed_utterance(encoder.preprocess_wav("input2.wav")))
+    embeds.append(encoder.embed_utterance(encoder.preprocess_wav("input3.wav")))
 
     print("Interactive generation loop")
 
@@ -114,7 +120,7 @@ if __name__ == '__main__':
         
         # The synthesizer works in batch, so you need to put your data in a list or numpy array
         texts = [text]
-        embeds = [embed]
+        #embeds = [embed]
         # If you know what the attention layer alignments are, you can retrieve them here by
         # passing return_alignments=True
         specs = synthesizer.synthesize_spectrograms(texts, embeds)
