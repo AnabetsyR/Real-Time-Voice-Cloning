@@ -84,8 +84,7 @@ if __name__ == '__main__':
     
 
     embeds = []
-    embed = encoder.embed_utterance(encoder.preprocess_wav("input.wav"))
-    embeds.append(embed)
+    embeds.append(encoder.embed_utterance(encoder.preprocess_wav("input.wav")))
 
 
 
