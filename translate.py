@@ -15,9 +15,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
+
+    # remove this, should be hardcoded elsewhere
     parser.add_argument("-e", "--enc_model_fpath", type=Path,default="encoder/saved_models/pretrained.pt",help="Path to a saved encoder")
     parser.add_argument("-s", "--syn_model_dir", type=Path,default="synthesizer/saved_models/logs-pretrained/",help="Directory containing the synthesizer model")
     parser.add_argument("-v", "--voc_model_fpath", type=Path,default="vocoder/saved_models/pretrained/pretrained.pt",help="Path to a saved vocoder")
+    # 
 
     parser.add_argument("--out", type=Path,default="output.wav", help="sets the output wav file")
     parser.add_argument("--textin", type=Path,help="sets the output wav file")
