@@ -104,9 +104,13 @@ if __name__ == '__main__':
 
 
     embeds = []
-    embeds.append(encoder.embed_utterance(encoder.preprocess_wav("input.wav")))
-    embeds.append(encoder.embed_utterance(encoder.preprocess_wav("input2.wav")))
-    embeds.append(encoder.embed_utterance(encoder.preprocess_wav("input3.wav")))
+
+
+    preprocessed_wav = encoder.preprocess_wav("input.wav")
+    embed = encoder.embed_utterance(preprocessed_wav)
+    embeds.append(embed)
+
+
 
     print("Interactive generation loop")
 
